@@ -1,4 +1,4 @@
-board = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']]
+board = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']] #пустой игровой стол
 
 class TicTacToe():
 
@@ -20,7 +20,7 @@ class TicTacToe():
                     movess.append(j)
         return movess
 
-    def win(self, XO):
+    def win(self, XO): #проверка победил ли игрок
         for i in self.board:
             if i.count(XO) == 3:
                 return True
@@ -33,19 +33,35 @@ class TicTacToe():
             return True
         return False
 
-    def game_over(self):
+    def game_over(self): #проверка завершилась ли игра
         self.moves()
         if len(self.moves()) == 0 or self.win('X') == True or self.win('O') == True:
-            return False
-        return True
+            return True
+        return False
 
-    def get_move(self, turn):
+    def get_move(self, turn): #получение от игрока координаты
         move = int(input(f'Ход игрока {turn}: '))
-        if move not in self.moves() or move not in range(1, 10):
-            move = int(input('Нельзя совершить такой ход, давай попробуем снова: '))
         return move
 
-game = TicTacToe(board)
-while game.game_over():
+    def num_to_X_or_O(self, turn, num): #закрашивание клетки на поле
+        string = (num - 1) // 3
+        col = (num - 1) % 3
+        self.board[string][col] = str(turn)
+
+
+game = TicTacToe(board) 
+while not game.game_over():
     game.board_print()
-    X = game.get_move()
+    X = game.get_move('X')
+    game.num_to_X_or_O('X', X)
+    game.board_print()
+    if game.game_over():
+        break
+    O = game.get_move('O')
+    game.num_to_X_or_O('O', O)
+
+if game.win('X'):
+    print('Крестики победили')
+elif game.win('O'):
+    print('Нолики победили')
+else: print('Ну, что сказать.. Ничья!')
